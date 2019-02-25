@@ -1,0 +1,2 @@
+var posX, posY : int
+
