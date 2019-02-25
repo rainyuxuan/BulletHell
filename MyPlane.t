@@ -1,2 +1,0 @@
-var posX, posY : int
-
