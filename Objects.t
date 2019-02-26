@@ -1,6 +1,6 @@
 unit
 class Objects
-    export pX, pY, getX,getY, setPos
+    export pX, pY, getX,getY, sP
     var pX, pY : int
     
     fcn getX():int
@@ -11,9 +11,9 @@ class Objects
 	result pY
     end getY
     
-    proc setPos(x,y: int)
+    proc sP(x,y: int) %set position
 	pX := x
 	pY := y
-    end setPos
+    end sP
     
 end Objects

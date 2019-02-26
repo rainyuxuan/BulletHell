@@ -1,6 +1,8 @@
 unit
 class Plane
     inherit Objects in "Objects.t"
+    export draw
+    deferred proc draw
 end Plane
 
 %var plane := Pic.FileNew("picMyPlane.jpg")
