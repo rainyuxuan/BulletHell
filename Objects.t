@@ -1,7 +1,14 @@
 unit
 class Objects
-    export pX, pY, getX,getY, sP
+    export  pX, pY, col,
+	    getX,getY, sP, 
+	    move, draw, erase
     var pX, pY : int
+    var col : int
+    
+    deferred proc erase
+    deferred proc draw
+    deferred proc move
     
     fcn getX():int
 	result pX
@@ -15,5 +22,5 @@ class Objects
 	pX := x
 	pY := y
     end sP
-    
+
 end Objects
