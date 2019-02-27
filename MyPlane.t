@@ -1,11 +1,18 @@
 unit
 class MyPlane
     inherit Plane in "Plane.t"
+    
     export EXP, life
     var EXP, life:int
-    var defaultCol:int:=white
-    col:=defaultCol
-    
+    var dfCol:int:=white
+    col:=dfCol
+
+    body proc move
+	erase
+	pX += dX
+	pY += dY
+	draw
+    end move
 
     body proc draw
 	Draw.FillBox (pX - 18, pY, pX + 18, pY + 10, col)
@@ -21,6 +28,13 @@ class MyPlane
     body proc erase
 	col:= 176
 	draw
-	col:=defaultCol
+	col:=dfCol
     end erase
+    
+    body proc shoot %% need to put into array
+	var bul : ^Bullet
+	new bul
+	^bul.cons(pX, pY + 20, 0, 8, 1, white, 3)
+	^bul.move
+    end shoot
 end MyPlane
