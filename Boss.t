@@ -1,0 +1,45 @@
+unit
+class Boss
+    inherit enemy1 in "enemy1.t"
+    body proc drawBoss
+	Draw.Arc (pX, pY, 220, 100, 90, 180, 30)
+	Draw.Arc (pX, pY, 300, 100, 0, 90, 30)
+	Draw.FillArc (pX, pY, 220, 80, 90, 180, 30)
+	Draw.FillArc (pX, pY, 300, 80, 0, 90, 30)
+	Draw.FillBox (pX - 135, pY - 110, pX - 18, pY - 80, 23)
+	Draw.FillArc (pX, pY, 220, 100, 180, 270, 24)
+	Draw.FillArc (pX, pY, 300, 100, 270, 0, 24)
+	Draw.FillArc (pX, pY, 220, 80, 180, 270, 26)
+	Draw.FillArc (pX, pY, 300, 80, 270, 0, 26)
+	Draw.FillArc (pX, pY, 220, 55, 90, 180, 29)
+	Draw.FillArc (pX, pY, 300, 55, 0, 90, 29)
+	Draw.FillArc (pX, pY, 220, 55, 180, 270, 27)
+	Draw.FillArc (pX, pY, 300, 55, 270, 0, 27)
+	Draw.FillArc (pX, pY, 220, 21, 90, 180, 28)
+	Draw.FillArc (pX, pY, 300, 21, 0, 90, 28)
+	Draw.FillArc (pX, pY, 220, 21, 180, 270, 28)
+	Draw.FillArc (pX, pY, 300, 21, 270, 0, 28)
+	Draw.Line (pX - 135, pY - 110, pX - 135, pY - 80, black)
+	Draw.FillArc (pX - 125, pY - 110, 10, 10, 180, 270, 23)
+	Draw.FillBox (pX - 125, pY - 120, pX - 30, pY - 110, 23)
+	Draw.FillArc (pX - 30, pY - 101, 12, 19, 270, 0, 23)
+	Draw.FillBox (pX - 125, pY - 100, pX - 115, pY - 110, 43)
+	Draw.FillBox (pX - 105, pY - 100, pX - 95, pY - 110, 43)
+	Draw.FillBox (pX - 85, pY - 100, pX - 75, pY - 110, 43)
+	Draw.FillBox (pX - 65, pY - 100, pX - 55, pY - 110, 43)
+	Draw.FillArc (pX + 250, pY, 70, 7, 90, 180, 26)
+	Draw.FillArc (pX + 250, pY, 25, 6, 0, 90, 26)
+	Draw.FillArc (pX + 250, pY, 70, 7, 180, 270, 23)
+	Draw.FillArc (pX + 250, pY, 25, 6, 270, 0, 23)
+	Draw.Arc (pX + 250, pY, 70, 7, 90, 180, black)
+	Draw.Arc (pX + 250, pY, 25, 6, 0, 90, black)
+	Draw.Arc (pX + 250, pY, 70, 7, 180, 270, black)
+	Draw.Arc (pX + 250, pY, 25, 6, 270, 0, black)
+	Draw.FillArc (pX + 244, pY + 59, 70, 30, 89, 143, 28)
+	Draw.FillArc (pX + 244, pY + 59, 23, 30, -25, 90, 28)
+	Draw.FillArc (pX + 244, pY - 59, 70, 28, 221, 273, 25)
+	Draw.FillArc (pX + 244, pY - 59, 23, 28, 281, 26, 25)
+    end drawBoss
+end Boss
+
+
