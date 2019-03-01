@@ -1,12 +1,12 @@
 unit
 class Bullet
     inherit Objects in "Objects.t"
-    export  tp, size
+    export tp, size
     var tp, size, dfCol : int
 
     %tp: type, user:1, enemy:2
 
-    body proc cons (px, py, dx, dy, t, c, s : int)
+    body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
 	pX := px
 	pY := py
 	dX := dx
@@ -25,7 +25,7 @@ class Bullet
     end move
 
     body proc draw
-	Draw.FillOval (dX, dY, size, size, col)
+	Draw.FillOval (pX, pY, size, size, col)
     end draw
 
     body proc erase
@@ -33,8 +33,8 @@ class Bullet
 	draw
 	col := dfCol
     end erase
-    
+
     proc hit
-	
+	%%%%%%%%%%%%5
     end hit
 end Bullet

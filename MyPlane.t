@@ -1,17 +1,32 @@
 unit
 class MyPlane
     inherit Plane in "Plane.t"
-    
-    export EXP, life
-    var EXP, life:int
-    var dfCol:int:=white
-    col:=dfCol
+
+    export EXP, life, sDx, sDy
+    var EXP, life : int
+    var dfCol : int := white
+    var bulArr : flexible array 1 .. 0 of ^Bullet
+    col := dfCol
+    dX := 0
+    dY := 0
+    var bulCnt := 0
+
+    proc sDx (x : int)
+	dX := x
+    end sDx
+
+    proc sDy (y : int)
+	dY := y
+    end sDy
 
     body proc move
 	erase
 	pX += dX
 	pY += dY
 	draw
+	%delay(300)
+	%dX:=0
+	%dY:=0
     end move
 
     body proc draw
@@ -24,17 +39,31 @@ class MyPlane
 	Draw.FillBox (pX - 3, pY - 3, pX + 3, pY - 17, col)
 	Draw.FillBox (pX - 7, pY - 17, pX + 7, pY - 21, col)
     end draw
-    
+
     body proc erase
-	col:= 176
+	col := 176
 	draw
-	col:=dfCol
+	col := dfCol
     end erase
-    
+
     body proc shoot %% need to put into array
-	var bul : ^Bullet
-	new bul
-	^bul.cons(pX, pY + 20, 0, 8, 1, white, 3)
-	^bul.move
+	var temp : ^Bullet
+	bulCnt += 1
+	if bulCnt >= 50 then
+	    for i : 1 .. upper (bulArr)
+		^ (bulArr (i)).erase
+	    end for
+	    bulCnt := 1
+	end if
+	new bulArr, bulCnt
+
+	new temp
+	bulArr (upper (bulArr)) := temp
+	^temp.cons (pX, pY + 20, 0, 30, 1, white, 3)
+	for i : 1 .. upper (bulArr)
+	    ^ (bulArr (i)).move
+	end for
+	%^temp.draw
+	%delay(10)
     end shoot
 end MyPlane

@@ -6,7 +6,7 @@ class Objects
     var pX, pY,dX, dY : int
     var col : int
     
-    deferred proc cons
+    deferred proc cons(px, py, dx, dy, t, c, s : int)
     deferred proc erase
     deferred proc draw
     deferred proc move

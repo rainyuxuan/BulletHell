@@ -2,12 +2,17 @@ unit
 class Plane
     inherit Objects in "Objects.t"
     import Bullet in "Bullet.t"
-    export HP, damage, bulArr
+    export HP, damage,
+	    boom, shoot
     
     var HP,damage:int
-    var bulArr: flexible array 1..0 of ^Bullet
+    
 
     deferred proc boom
     deferred proc shoot
+     
+    % fcn getBulArr():flexible array 1..* of ^Bullet
+    %     result bulArr
+    % end getBulArr
     
 end Plane
