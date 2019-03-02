@@ -4,12 +4,15 @@ class MyPlane
 
     export EXP, life, sDx, sDy
     var EXP, life : int
-    var dfCol : int := white
-    var bulArr : flexible array 1 .. 0 of ^Bullet
+    const dfCol : int := white
+    var bulArr : array 1 .. 20 of ^Bullet
     col := dfCol
     dX := 0
     dY := 0
-    var bulCnt := 0
+    var bulCnt := 1
+    HP := 100
+    damage := 34
+
 
     proc sDx (x : int)
 	dX := x
@@ -21,12 +24,16 @@ class MyPlane
 
     body proc move
 	erase
-	pX += dX
-	pY += dY
+	if pX + dX > 20 and pX + dX < 380 then
+	    pX += dX
+	end if
+	if pY + dY > 20 and pY + dY < 530 then
+	    pY += dY
+	end if
 	draw
 	%delay(300)
-	%dX:=0
-	%dY:=0
+	dX := 0
+	dY := 0
     end move
 
     body proc draw
@@ -47,22 +54,36 @@ class MyPlane
     end erase
 
     body proc shoot %% need to put into array
-	var temp : ^Bullet
-	bulCnt += 1
-	if bulCnt >= 50 then
-	    for i : 1 .. upper (bulArr)
-		^ (bulArr (i)).erase
-	    end for
-	    bulCnt := 1
+	%%at the beginnning
+	if bulCnt <= 20 then
+	    var temp : ^Bullet
+	    new temp
+	    ^temp.cons (pX, pY + 20, 0, 30, 1, white, 3)
+	    bulArr (bulCnt) := temp
+	    bulCnt += 1
 	end if
-	new bulArr, bulCnt
-
-	new temp
-	bulArr (upper (bulArr)) := temp
-	^temp.cons (pX, pY + 20, 0, 30, 1, white, 3)
-	for i : 1 .. upper (bulArr)
-	    ^ (bulArr (i)).move
+	
+	%normally
+	for i : 1 .. bulCnt - 1
+	    if ^ (bulArr (i)).getY () >= 530 then
+		^ (bulArr (i)).erase
+		^ (bulArr (i)).sP (pX, pY + 20)
+		% for i : 1 .. upper (bulArr)
+		%     ^ (bulArr (i)).erase
+		% end for
+		%if bulCnt > 20 then bulCnt := 1 end if
+	    else
+		^ (bulArr (i)).move
+	    end if
 	end for
+
+	%new bulArr, bulCnt
+
+
+
+	% for i : 1 .. bulCnt - 1
+	% 
+	% end for
 	%^temp.draw
 	%delay(10)
     end shoot
