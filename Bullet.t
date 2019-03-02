@@ -31,7 +31,7 @@ class Bullet
     body proc erase
 	col := 176
 	draw
-	col := dfCol
+	col := colorbg
     end erase
 
     proc hit
