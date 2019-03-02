@@ -8,43 +8,39 @@ new me
 ^me.sP (200, 70)
 ^me.draw ()
 delay (10)
-process main ()
+process Main ()
     loop
 	^me.erase ()
 	%^me.sP (x - 5 * i, 80 + 5 * i)
 	^me.draw ()
 	^me.shoot ()
-	^me.move()
+	^me.move ()
 	Draw.FillBox (0, 550, 400, 600, white)
 	delay (30)
     end loop
 
-end main
+end Main
 
-var direct:string(1)
+var direct : string (1)
 
 process userinput ()
+    var direct : array char of boolean
     loop
-	getch (direct)
-	if direct = KEY_UP_ARROW then
-	    %sP++
-	    ^me.sDy(5)
-	    ^me.sDx(0)
+	Input.KeyDown (direct)
+	if direct (KEY_UP_ARROW) then
+	    ^me.sDy (3)
 	end if
-	if direct = KEY_DOWN_ARROW then
-	    ^me.sDy(-5)
-	    ^me.sDx(0)
+	if direct (KEY_DOWN_ARROW) then
+	    ^me.sDy (-3)
 	end if
-	if direct = KEY_RIGHT_ARROW then
-	    ^me.sDx(5)
-	    ^me.sDy(0)
+	if direct (KEY_RIGHT_ARROW) then
+	    ^me.sDx (3)
 	end if
-	if direct = KEY_LEFT_ARROW then
-	    ^me.sDx(-5)
-	    ^me.sDy(0)
+	if direct (KEY_LEFT_ARROW) then
+	    ^me.sDx (-3)
 	end if
     end loop
 end userinput
 
 fork userinput
-fork main
+fork Main
