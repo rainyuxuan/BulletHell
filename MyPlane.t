@@ -1,18 +1,26 @@
 unit
 class MyPlane
     inherit Plane in "Plane.t"
-
+    
     export EXP, life, sDx, sDy
     var EXP, life : int
     const dfCol : int := white
     var bulArr : array 1 .. 20 of ^Bullet
+    %var eneArr : array 1 .. 15 of ^Enemy
     col := dfCol
     dX := 0
     dY := 0
     var bulCnt := 1
+    var bulNum: int := 1
+    var isBulBuilt : boolean := false
     HP := 100
     damage := 34
-
+    
+    % proc setEnemyList(arr: array 1.. * of ^Enemy)
+    %     for i: 1.. upper(arr)
+    %         eneArr(i) := arr(i)
+    %     end for
+    % end setEnemyList
 
     proc sDx (x : int)
 	dX := x
@@ -36,6 +44,8 @@ class MyPlane
 	dY := 0
     end move
 
+
+
     body proc draw
 	Draw.FillBox (pX - 18, pY, pX + 18, pY + 10, col)
 	Draw.Box (pX - 5, pY + 10, pX + 5, pY + 15, col)
@@ -55,36 +65,27 @@ class MyPlane
 
     body proc shoot %% need to put into array
 	%%at the beginnning
-	if bulCnt <= 20 then
+	if bulCnt <= 17 and not isBulBuilt then
 	    var temp : ^Bullet
 	    new temp
 	    ^temp.cons (pX, pY + 20, 0, 30, 1, white, 3)
 	    bulArr (bulCnt) := temp
 	    bulCnt += 1
+	    if bulCnt >= 17 then
+		isBulBuilt := true
+	    end if
 	end if
-	
+
 	%normally
 	for i : 1 .. bulCnt - 1
-	    if ^ (bulArr (i)).getY () >= 530 then
-		^ (bulArr (i)).erase
-		^ (bulArr (i)).sP (pX, pY + 20)
-		% for i : 1 .. upper (bulArr)
-		%     ^ (bulArr (i)).erase
-		% end for
-		%if bulCnt > 20 then bulCnt := 1 end if
+	    if ^ (bulArr (i)).getY () >= 555 then
+		var temp : ^Bullet
+		new temp
+		^temp.cons (pX, pY + 20, 0, 30, 1, white, 3)
+		bulArr (i) := temp
 	    else
 		^ (bulArr (i)).move
 	    end if
 	end for
-
-	%new bulArr, bulCnt
-
-
-
-	% for i : 1 .. bulCnt - 1
-	% 
-	% end for
-	%^temp.draw
-	%delay(10)
     end shoot
 end MyPlane

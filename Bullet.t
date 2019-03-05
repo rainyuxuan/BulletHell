@@ -1,7 +1,9 @@
+
 unit
 class Bullet
     inherit Objects in "Objects.t"
-    export tp, size
+    %import Plane in "Plane.t"
+    export tp, size,hit
     var tp, size, dfCol : int
 
     %tp: type, user:1, enemy:2
@@ -31,10 +33,15 @@ class Bullet
     body proc erase
 	col := 176
 	draw
-	col := colorbg
+	col := white
     end erase
 
-    proc hit
-	%%%%%%%%%%%%5
+    fcn hit ():boolean%arr: array 1.. * of ^Plane): boolean
+	% for i : 1.. upper(arr)
+	%     if pX = ^(arr(i)).getX() and pY = ^(arr(i)).getY() then
+	%         result true
+	%     end if
+	% end for
+	result false
     end hit
 end Bullet
