@@ -2,14 +2,15 @@ unit
 class MyPlane
     inherit Plane in "Plane.t"
     
-    export EXP, life, sDx, sDy
+    export EXP, life, sDx, sDy,bulArr
     var EXP, life : int
-    const dfCol : int := white
+    dfCol := white
     var bulArr : array 1 .. 20 of ^Bullet
     %var eneArr : array 1 .. 15 of ^Enemy
     col := dfCol
     dX := 0
     dY := 0
+    tp:=1
     var bulCnt := 1
     var bulNum: int := 1
     var isBulBuilt : boolean := false
@@ -32,10 +33,10 @@ class MyPlane
 
     body proc move
 	erase
-	if pX + dX > 20 and pX + dX < 380 then
+	if pX + dX > 25 and pX + dX < 380 then
 	    pX += dX
 	end if
-	if pY + dY > 20 and pY + dY < 530 then
+	if pY + dY > 25 and pY + dY < 200 then
 	    pY += dY
 	end if
 	draw

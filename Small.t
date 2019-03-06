@@ -1,8 +1,10 @@
 unit
 class Small
     inherit Enemy in "Enemy.t" 
-    export tp, size
-    var tp, size, dfCol : int
+
+    
+    HP:=100
+    tp:= 2
 
     body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
 	pX := px

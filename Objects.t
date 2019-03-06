@@ -4,6 +4,7 @@ class Objects
 	getX, getY, sP, cons,
 	move, draw, erase
     var pX, pY,dX, dY : int
+    var tp, size, dfCol : int
     var col : int
     
     deferred proc cons(px, py, dx, dy, t, c, s : int)

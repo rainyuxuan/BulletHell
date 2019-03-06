@@ -1,8 +1,8 @@
 unit
 class Middle 
     inherit Enemy in "Enemy.t"
-    export tp, size 
-    var tp, size, dfCol : int
+
+
       body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
 	pX := px
 	pY := py
@@ -35,4 +35,4 @@ class Middle
 	draw
 	col := dfCol
     end erase
-end Middle 
+end Middle

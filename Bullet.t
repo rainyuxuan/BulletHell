@@ -3,8 +3,7 @@ unit
 class Bullet
     inherit Objects in "Objects.t"
     %import Plane in "Plane.t"
-    export tp, size,hit
-    var tp, size, dfCol : int
+    export hit
 
     %tp: type, user:1, enemy:2
 
