@@ -7,36 +7,36 @@ setscreen ("graphics:400;600,nocursor")
 
 %%%%%%%%%% Initialization %%%%%%%%%%%%%
 Draw.FillBox (0, 0, 400, 550, 176)
-var x : int := 200
+
 var me : ^MyPlane
 new me
-^me.sP (200, 70)
+%^me.sP (200, 70)
+^me.cons (200, 70, 0, 0, 1, white, 37)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+var eneArr : flexible array 1 .. 20 of ^Small
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%% Functions and Procedures %%%%%%%%%
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+proc checkHit
+    for i : 1 .. upper ( ^me.bulArr)
+	var x : int := ^ ( ^me.bulArr (i)).pX
+	var y : int := ^ ( ^me.bulArr (i)).pY
+	 for j : 1..upper(eneArr)
+	%     if x=^(eneArr(j)).pX and y = ^(eneArr(j)).pY then
+	%        ^ ( ^me.bulArr (i)).setActive(false)
+	%        ^ ( eneArr(j)).hit()
+	%     end if
+	 end for
+    end for
+end checkHit
 
 
 
 %%%enemy test
 var they : ^Small
 new they
-^they.cons(100,400,0,0,2,yellow,3)
+^they.cons (100, 400, 0, 0, 2, yellow, 3)
 
 
 process Main ()
@@ -46,6 +46,9 @@ process Main ()
 	^me.move ()
 	Draw.FillBox (0, 550, 400, 600, white)
 	delay (25)
+	%checkHit
+	%checkHit
+	
     end loop
 
 end Main

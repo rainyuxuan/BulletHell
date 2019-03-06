@@ -115,7 +115,6 @@ class MyPlane
 	bulCnt += 1
 	if bulCnt = bulNum + 1 then
 	    bulCnt := 1
-
 	end if
     end shoot
 end MyPlane
