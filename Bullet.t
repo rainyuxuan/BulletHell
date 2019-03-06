@@ -3,8 +3,9 @@ unit
 class Bullet
     inherit Objects in "Objects.t"
     %import Plane in "Plane.t"
-    export hit
+    export active, setActive
 
+    var active : boolean := false
     %tp: type, user:1, enemy:2
 
     body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
@@ -32,15 +33,10 @@ class Bullet
     body proc erase
 	col := 176
 	draw
-	col := white
+	col := dfCol
     end erase
 
-    fcn hit ():boolean%arr: array 1.. * of ^Plane): boolean
-	% for i : 1.. upper(arr)
-	%     if pX = ^(arr(i)).getX() and pY = ^(arr(i)).getY() then
-	%         result true
-	%     end if
-	% end for
-	result false
-    end hit
+    proc setActive (b : boolean)
+	active := b
+    end setActive
 end Bullet
