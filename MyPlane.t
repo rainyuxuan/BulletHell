@@ -11,15 +11,8 @@ class MyPlane
     tp := 1
     var bulCnt := 1
 
-    %var isBulBuilt : boolean := false
     HP := 100
     damage := 34
-
-    % proc setEnemyList(arr: array 1.. * of ^Enemy)
-    %     for i: 1.. upper(arr)
-    %         eneArr(i) := arr(i)
-    %     end for
-    % end setEnemyList
 
     proc sDx (x : int)
 	dX := x
@@ -41,11 +34,10 @@ class MyPlane
 	for i : 1 .. bulNum
 	    var temp : ^Bullet
 	    new temp
-	    ^temp.cons (pX, pY + 20, 0, 30, 1, white, 3)
+	    ^temp.cons (pX, pY + 20, 0, 20, 1, 66+i, 3)
 	    bulArr (i) := temp
-
 	end for
-	^ (bulArr (1)).setActive (true)
+	^ (bulArr (1)).setActive (false)
 	%^ (bulArr (1)).draw
     end cons
 
@@ -58,7 +50,6 @@ class MyPlane
 	    pY += dY
 	end if
 	draw
-	%delay(300)
 	dX := 0
 	dY := 0
     end move
@@ -98,14 +89,15 @@ class MyPlane
 	%normally
 	for i : 1 .. bulNum
 	    if ^ (bulArr (i)).getY () >= 555 then
+		^ (bulArr (i)).erase
 		^ (bulArr (i)).setActive (false)
 		var temp : ^Bullet
 		new temp
-		^temp.cons (pX, pY + 30, 0, 30, 1, white, 3)
+		^temp.cons (pX, pY + 15, 0, 20, 1, 66+i, 3)
 		bulArr (i) := temp
 	    end if
 	    if ^ (bulArr (i)).active = true then
-		^ (bulArr (bulCnt)).draw
+		%^ (bulArr (bulCnt)).draw
 		^ (bulArr (i)).move
 	    else
 		^ (bulArr (bulCnt)).setActive (true)

@@ -1,20 +1,28 @@
-import MyPlane in "MyPlane.t", Small in "Small.t", Middle in "Middle.t"
+import MyPlane in "MyPlane.t", Enemy in "Enemy.t"
 
 View.Set ("graphics")
 View.Update
 setscreen ("graphics:400;600,nocursor")
 
-
 %%%%%%%%%% Initialization %%%%%%%%%%%%%
 Draw.FillBox (0, 0, 400, 550, 176)
+var timer : int := 0 % count the time for guanqia
 
 var me : ^MyPlane
 new me
 %^me.sP (200, 70)
 ^me.cons (200, 70, 0, 0, 1, white, 37)
 
-var eneArr : flexible array 1 .. 20 of ^Small
+var eneArr : flexible array 1 .. 0 of ^Enemy
+new eneArr, 10
+for i : 1 .. 10
+    var they : ^Enemy
+    new they
+    eneArr (i) := they
+    ^they.cons (50 + (i - 1) * 35, 400 - i * 5, 0, 1, 2, yellow, 3)
+end for
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%% Functions and Procedures %%%%%%%%%
 
@@ -22,35 +30,30 @@ proc checkHit
     for i : 1 .. upper ( ^me.bulArr)
 	var x : int := ^ ( ^me.bulArr (i)).pX
 	var y : int := ^ ( ^me.bulArr (i)).pY
-	 for j : 1..upper(eneArr)
-	%     if x=^(eneArr(j)).pX and y = ^(eneArr(j)).pY then
-	%        ^ ( ^me.bulArr (i)).setActive(false)
-	%        ^ ( eneArr(j)).hit()
-	%     end if
-	 end for
+	for j : 1 .. upper (eneArr)
+	    if x = ^ (eneArr (j)).pX and y = ^ (eneArr (j)).pY then
+		^ ( ^me.bulArr (i)).setActive (false)
+		^ (eneArr (j)).hit ( ^me.damage)
+	    end if
+	end for
     end for
 end checkHit
 
-
-
 %%%enemy test
-var they : ^Small
-new they
-^they.cons (100, 400, 0, 0, 2, yellow, 3)
-
 
 process Main ()
     loop
 	^me.shoot ()
-	^they.draw
+	for i : 1 .. upper (eneArr)
+	    ^ (eneArr (i)).move ()
+	end for
 	^me.move ()
 	Draw.FillBox (0, 550, 400, 600, white)
 	delay (25)
-	%checkHit
-	%checkHit
-	
+	checkHit
+	checkHit
+	timer += 1
     end loop
-
 end Main
 
 var direct : string (1)
