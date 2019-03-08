@@ -14,13 +14,15 @@ new me
 ^me.cons (200, 70, 0, 0, 1, white, 37)
 
 var eneArr : flexible array 1 .. 0 of ^Enemy
-new eneArr, 10
-for i : 1 .. 10
-    var they : ^Enemy
-    new they
-    eneArr (i) := they
-    ^they.cons (50 + (i - 1) * 35, 400 - i * 5, 0, 1, 2, yellow, 3)
-end for
+proc newWave
+    new eneArr, 10
+    for i : 1 .. 10
+	var they : ^Enemy
+	new they
+	eneArr (i) := they
+	^they.cons (0 - 350 + (i - 1) * 35, 600 - i * 5, -2, 1, 2, 60 + i * 3, 300)
+    end for
+end newWave
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -31,9 +33,14 @@ proc checkHit
 	var x : int := ^ ( ^me.bulArr (i)).pX
 	var y : int := ^ ( ^me.bulArr (i)).pY
 	for j : 1 .. upper (eneArr)
-	    if x = ^ (eneArr (j)).pX and y = ^ (eneArr (j)).pY then
+	    if (x >= ^ (eneArr (j)).pX - 5 and x <= ^ (eneArr (j)).pX + 5) 
+	    and (y >= ^ (eneArr (j)).pY - 4 and y <= ^ (eneArr (j)).pY + 4) then
 		^ ( ^me.bulArr (i)).setActive (false)
-		^ (eneArr (j)).hit ( ^me.damage)
+		if ^ (eneArr (j)).hit ( ^me.damage) then
+		    ^ me.addEXP( ^ (eneArr (j)).size)
+		end if
+		%locatexy (0, 5r70)
+		%put ^ (eneArr (j)).HP
 	    end if
 	end for
     end for
@@ -51,7 +58,10 @@ process Main ()
 	Draw.FillBox (0, 550, 400, 600, white)
 	delay (25)
 	checkHit
-	checkHit
+	%checkHit
+	if timer mod 400 = 0 then
+	    newWave ()
+	end if
 	timer += 1
     end loop
 end Main

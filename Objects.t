@@ -1,11 +1,13 @@
 unit
 class Objects
-    export pX, pY, col, dX, dY,
+    export pX, pY, col, dX, dY,size, active,
 	getX, getY, sP, cons,
-	move, draw, erase
+	move, draw, erase,
+	setActive
     var pX, pY,dX, dY : int
     var tp, size, dfCol : int
     var col : int
+    var active: boolean
     
     deferred proc cons(px, py, dx, dy, t, c, s : int)
     deferred proc erase
@@ -24,5 +26,9 @@ class Objects
 	pX := x
 	pY := y
     end sP
+    
+    proc setActive (b : boolean)
+	active := b
+    end setActive
 
 end Objects

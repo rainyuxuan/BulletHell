@@ -2,7 +2,8 @@ unit
 class MyPlane
     inherit Plane in "Plane.t"
 
-    export EXP, life, sDx, sDy, bulArr
+    export EXP, life, bulArr,
+	 sDx, sDy,addEXP
     var EXP, life : int
     var bulNum : int := 26
     var bulArr : array 1 .. 26 of ^Bullet
@@ -13,6 +14,7 @@ class MyPlane
 
     HP := 100
     damage := 34
+    EXP := 0
 
     proc sDx (x : int)
 	dX := x
@@ -34,7 +36,7 @@ class MyPlane
 	for i : 1 .. bulNum
 	    var temp : ^Bullet
 	    new temp
-	    ^temp.cons (pX, pY + 20, 0, 20, 1, 66+i, 3)
+	    ^temp.cons (pX, pY + 20, 0, 20, 1, 66 + i, 3)
 	    bulArr (i) := temp
 	end for
 	^ (bulArr (1)).setActive (false)
@@ -46,15 +48,13 @@ class MyPlane
 	if pX + dX > 25 and pX + dX < 380 then
 	    pX += dX
 	end if
-	if pY + dY > 25 and pY + dY < 200 then
+	if pY + dY > 45 and pY + dY < 200 then
 	    pY += dY
 	end if
 	draw
 	dX := 0
 	dY := 0
     end move
-
-
 
     body proc draw
 	Draw.FillBox (pX - 18, pY, pX + 18, pY + 10, col)
@@ -72,21 +72,12 @@ class MyPlane
 	draw
 	col := dfCol
     end erase
+    
+    proc addEXP (e:int)
+	EXP += e div 100
+    end addEXP
 
     body proc shoot
-	%%at the beginnning
-	% if bulCnt <= 17 and not isBulBuilt then
-	%     var temp : ^Bullet
-	%     new temp
-	%     ^temp.cons (pX, pY + 20, 0, 30, 1, white, 3)
-	%     bulArr (bulCnt) := temp
-	%     bulCnt += 1
-	%     if bulCnt >= 17 then
-	%         isBulBuilt := true
-	%     end if
-	% end if
-
-	%normally
 	for i : 1 .. bulNum
 	    if ^ (bulArr (i)).getY () >= 555 then
 		^ (bulArr (i)).erase
@@ -97,11 +88,9 @@ class MyPlane
 		bulArr (i) := temp
 	    end if
 	    if ^ (bulArr (i)).active = true then
-		%^ (bulArr (bulCnt)).draw
 		^ (bulArr (i)).move
 	    else
 		^ (bulArr (bulCnt)).setActive (true)
-		%^(bulArr(bulCnt)).draw
 	    end if
 	end for
 	bulCnt += 1

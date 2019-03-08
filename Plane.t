@@ -11,8 +11,14 @@ class Plane
     deferred proc boom
     deferred proc shoot
     
-    proc hit (d:int)
+    fcn hit (d:int):boolean
 	HP -= d
+	if HP<=0 then
+	    active := false
+	    erase
+	    result true
+	end if
+	result false
     end hit
     % fcn getBulArr():flexible array 1..* of ^Bullet
     %     result bulArr

@@ -3,9 +3,9 @@ unit
 class Bullet
     inherit Objects in "Objects.t"
     %import Plane in "Plane.t"
-    export active, setActive
 
-    var active : boolean := false
+
+    active := false
     %tp: type, user:1, enemy:2
 
     body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
@@ -36,7 +36,5 @@ class Bullet
 	col := dfCol
     end erase
 
-    proc setActive (b : boolean)
-	active := b
-    end setActive
+    
 end Bullet

@@ -1,8 +1,10 @@
 unit
 class Enemy
     inherit Plane in "Plane.t"
-    
-    damage:=5
+
+    damage := 5
+    active := true
+    size := 100
 
     body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
 	pX := px
@@ -16,23 +18,26 @@ class Enemy
     end cons
 
     body proc move
-	erase
-	pX -= dX
-	pY -= dY
-	draw
+	if active then
+	    erase
+	    pX -= dX
+	    pY -= dY
+	    draw
+	end if
     end move
 
     body proc draw
+	%if active = true then
 	if tp = 2 then
 	    var x : array 1 .. 3 of int
-	    x(1) := pX-20
-	    x(2) := pX+20
-	    x(3):=pX
+	    x (1) := pX - 20
+	    x (2) := pX + 20
+	    x (3) := pX
 	    var y : array 1 .. 3 of int
-	    y(1):=pY+8
-	    y(2):=pY+8
-	    y(3):=pY-4
-	    Draw.FillPolygon (x,y,3, col)
+	    y (1) := pY + 8
+	    y (2) := pY + 8
+	    y (3) := pY - 4
+	    Draw.FillPolygon (x, y, 3, col)
 	    %Draw.Line (pX, pY - 4, pX - 20, pY + 8, col)
 	    %Draw.Line (pX, pY - 4, pX + 20, pY + 8, col)
 	    %Draw.Fill (pX, pY, col, col)
@@ -47,6 +52,7 @@ class Enemy
 	    Draw.Line (pX - 19, pY - 13, pX - 7, pY - 13, col)
 	    Draw.Line (pX + 19, pY - 13, pX + 7, pY - 13, col)
 	end if
+	%end if
     end draw
 
     body proc erase
