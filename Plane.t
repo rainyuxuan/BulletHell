@@ -3,21 +3,25 @@ class Plane
     inherit Objects in "Objects.t"
     import Bullet in "Bullet.t"
     export HP, damage,
-	boom, shoot, hit
+	stopDisplay, boom, shoot, hit
 
     var HP, damage : int
 
 
     deferred proc shoot
-    
+
+    proc stopDisplay
+	dfCol := 176
+    end stopDisplay
+
     proc boom
 	%draw
-	Draw.FillStar(pX+17,pY+17,pX-17,pY-17,yellow)
-	Draw.FillStar(pX-10,pY-10,pX+10,pY+10,red)
-	delay(35)
+	Draw.FillStar (pX + 17, pY + 17, pX - 17, pY - 17, yellow)
+	Draw.FillStar (pX - 10, pY - 10, pX + 10, pY + 10, red)
+	delay (35)
 	%erase
-	Draw.FillStar(pX+17,pY+17,pX-17,pY-17,176)
-	Draw.FillStar(pX-10,pY-10,pX+10,pY+10,176)
+	Draw.FillStar (pX + 17, pY + 17, pX - 17, pY - 17, 176)
+	Draw.FillStar (pX - 10, pY - 10, pX + 10, pY + 10, 176)
     end boom
 
     %this fcn processes to reduce HP,
@@ -28,11 +32,12 @@ class Plane
 	    active := false
 	    erase
 	    boom
+	    stopDisplay
 	    result true
 	end if
 	result false
     end hit
 
-    
+
 
 end Plane
