@@ -14,15 +14,7 @@ new me
 ^me.cons (200, 70, 0, 0, 1, white, 37)
 
 var eneArr : flexible array 1 .. 0 of ^Enemy
-proc newWave
-    new eneArr, 10
-    for i : 1 .. 10
-	var they : ^Enemy
-	new they
-	eneArr (i) := they
-	^they.cons (0 - 350 + (i - 1) * 35, 600 - i * 5, -2, 1, 2, 60 + i * 3, 300)
-    end for
-end newWave
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -33,8 +25,8 @@ proc checkHit
 	var x : int := ^ ( ^me.bulArr (i)).pX
 	var y : int := ^ ( ^me.bulArr (i)).pY
 	for j : 1 .. upper (eneArr)
-	    if (x >= ^ (eneArr (j)).pX - 5 and x <= ^ (eneArr (j)).pX + 5)
-		    and (y >= ^ (eneArr (j)).pY - 4 and y <= ^ (eneArr (j)).pY + 4)
+	    if (x >= ^ (eneArr (j)).pX - 13 and x <= ^ (eneArr (j)).pX + 13)
+		    and (y >= ^ (eneArr (j)).pY - 10 and y <= ^ (eneArr (j)).pY + 10)
 		    and ^ (eneArr (j)).active then
 		^ ( ^me.bulArr (i)).setActive (false)
 		if ^ (eneArr (j)).hit ( ^me.damage) then
@@ -45,9 +37,9 @@ proc checkHit
     end for
 end checkHit
 
-%%%enemy test
 
-process Main ()
+%%%%%%%%%%%%%%%%%%%%%% PROCESSES %%%%%%%%%%%%%%%%%%%%%%%%%
+process MAIN ()
     loop
 	^me.shoot ()
 	for i : 1 .. upper (eneArr)
@@ -58,17 +50,30 @@ process Main ()
 	delay (25)
 	checkHit
 	%checkHit
-	if timer mod 400 = 0 then
-	    newWave ()
+    end loop
+end MAIN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+process SCHEDULE
+    loop
+	delay (50)
+	if timer mod 250 = 0 then
+	    new eneArr, 10
+	    for i : 1 .. 10
+		var they : ^Enemy
+		new they
+		eneArr (i) := they
+		%pX, pY, dX, dY, type, color, size
+		^they.cons (0 - 350 + (i - 1) * 35, 600 - i * 5,
+		    - 2, 1, 2, 60 + i * 3, 1000)
+	    end for
 	end if
 	timer += 1
     end loop
-end Main
-
+end SCHEDULE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var direct : string (1)
-process Control ()
+process CONTROL ()
     var direct : array char of boolean
     loop
 	Input.KeyDown (direct)
@@ -85,22 +90,22 @@ process Control ()
 	    ^me.sDx (-4)
 	end if
     end loop
-end Control
-
+end CONTROL
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-process UI_Display
+process UI_DISPLAY
     loop
-	delay (100)
 	locatexy (2, 580)
 	put "Your score: ", ^me.EXP
 	Draw.FillBox (0, 550, 400, 570, white)
 	Draw.FillBox (0, 550, 4 * ^me.HP, 570, red)
+	delay (100)
     end loop
-end UI_Display
+end UI_DISPLAY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-fork Control
-fork Main
-fork UI_Display
+fork CONTROL
+fork MAIN
+fork UI_DISPLAY
+fork SCHEDULE

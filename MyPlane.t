@@ -3,17 +3,17 @@ class MyPlane
     inherit Plane in "Plane.t"
 
     export EXP, life, bulArr,
-	 sDx, sDy,addEXP
+	sDx, sDy, addEXP
     var EXP, life : int
-    var bulNum : int := 26
-    var bulArr : array 1 .. 26 of ^Bullet
+    var bulNum : int := 25
+    var bulArr : array 1 .. 25 of ^Bullet
     dX := 0
     dY := 0
     tp := 1
     var bulCnt := 1
 
     HP := 100
-    damage := 34
+    damage := 25
     EXP := 0
 
     proc sDx (x : int)
@@ -38,8 +38,9 @@ class MyPlane
 	    new temp
 	    ^temp.cons (pX, pY + 20, 0, 20, 1, 66 + i, 3)
 	    bulArr (i) := temp
+	    ^ (bulArr (i)).setActive (true)
 	end for
-	^ (bulArr (1)).setActive (false)
+	%^ (bulArr (1)).setActive (false)
 	%^ (bulArr (1)).draw
     end cons
 
@@ -72,25 +73,30 @@ class MyPlane
 	draw
 	col := dfCol
     end erase
-    
-    proc addEXP (e:int)
-	EXP += e div 100
+
+    % this proc adds EXP when scored
+    proc addEXP (e : int)
+	EXP += e div 10
     end addEXP
 
     body proc shoot
-	for i : 1 .. bulNum
-	    if ^ (bulArr (i)).getY () >= 555 then
-		^ (bulArr (i)).erase
+	for i : 1 .. bulNum %go through each bullet
+	    if ^ (bulArr (i)).getY () >= 525 then   %if exceed boundary
+		^ (bulArr (i)).erase                %disappear and will not move/draw
 		^ (bulArr (i)).setActive (false)
-		var temp : ^Bullet
+		var temp : ^Bullet                  %create new bullet for future use
 		new temp
-		^temp.cons (pX, pY + 15, 0, 20, 1, 66+i, 3)
+		^temp.cons (pX, pY + 15, Rand.Int(-1,1), 20, 1, 66 + i, 3)
 		bulArr (i) := temp
 	    end if
-	    if ^ (bulArr (i)).active = true then
+	    
+	    if ^ (bulArr (i)).active = true then    %for each active bullet, move&draw
 		^ (bulArr (i)).move
 	    else
-		^ (bulArr (bulCnt)).setActive (true)
+		%since only one bullet is shot from me each time, 
+		%therefore we can only activate this bullet
+		%which is bulArr(bulCnt)
+		^ (bulArr (bulCnt)).setActive (true)    
 	    end if
 	end for
 	bulCnt += 1

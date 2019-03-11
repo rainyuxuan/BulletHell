@@ -8,20 +8,31 @@ class Plane
     var HP, damage : int
 
 
-    deferred proc boom
     deferred proc shoot
     
-    fcn hit (d:int):boolean
+    proc boom
+	%draw
+	Draw.FillStar(pX+17,pY+17,pX-17,pY-17,yellow)
+	Draw.FillStar(pX-10,pY-10,pX+10,pY+10,red)
+	delay(35)
+	%erase
+	Draw.FillStar(pX+17,pY+17,pX-17,pY-17,176)
+	Draw.FillStar(pX-10,pY-10,pX+10,pY+10,176)
+    end boom
+
+    %this fcn processes to reduce HP,
+    %at thte same time results if the plane dies
+    fcn hit (d : int) : boolean
 	HP -= d
-	if HP<=0 then
+	if HP <= 0 then
 	    active := false
 	    erase
+	    boom
 	    result true
 	end if
 	result false
     end hit
-    % fcn getBulArr():flexible array 1..* of ^Bullet
-    %     result bulArr
-    % end getBulArr
+
+    
 
 end Plane

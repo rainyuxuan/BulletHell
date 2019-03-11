@@ -36,5 +36,5 @@ class Bullet
 	col := dfCol
     end erase
 
-    
+
 end Bullet
