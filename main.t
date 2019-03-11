@@ -33,14 +33,13 @@ proc checkHit
 	var x : int := ^ ( ^me.bulArr (i)).pX
 	var y : int := ^ ( ^me.bulArr (i)).pY
 	for j : 1 .. upper (eneArr)
-	    if (x >= ^ (eneArr (j)).pX - 5 and x <= ^ (eneArr (j)).pX + 5) 
-	    and (y >= ^ (eneArr (j)).pY - 4 and y <= ^ (eneArr (j)).pY + 4) then
+	    if (x >= ^ (eneArr (j)).pX - 5 and x <= ^ (eneArr (j)).pX + 5)
+		    and (y >= ^ (eneArr (j)).pY - 4 and y <= ^ (eneArr (j)).pY + 4)
+		    and ^ (eneArr (j)).active then
 		^ ( ^me.bulArr (i)).setActive (false)
 		if ^ (eneArr (j)).hit ( ^me.damage) then
-		    ^ me.addEXP( ^ (eneArr (j)).size)
+		    ^me.addEXP ( ^ (eneArr (j)).size)
 		end if
-		%locatexy (0, 5r70)
-		%put ^ (eneArr (j)).HP
 	    end if
 	end for
     end for
@@ -55,7 +54,7 @@ process Main ()
 	    ^ (eneArr (i)).move ()
 	end for
 	^me.move ()
-	Draw.FillBox (0, 550, 400, 600, white)
+	%Draw.FillBox (0, 550, 400, 600, white)
 	delay (25)
 	checkHit
 	%checkHit
@@ -66,9 +65,10 @@ process Main ()
     end loop
 end Main
 
-var direct : string (1)
 
-process userinput ()
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+var direct : string (1)
+process Control ()
     var direct : array char of boolean
     loop
 	Input.KeyDown (direct)
@@ -85,7 +85,22 @@ process userinput ()
 	    ^me.sDx (-4)
 	end if
     end loop
-end userinput
+end Control
 
-fork userinput
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+process UI_Display
+    loop
+	delay (100)
+	locatexy (2, 580)
+	put "Your score: ", ^me.EXP
+	Draw.FillBox (0, 550, 400, 570, white)
+	Draw.FillBox (0, 550, 4 * ^me.HP, 570, red)
+    end loop
+end UI_Display
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+fork Control
 fork Main
+fork UI_Display
