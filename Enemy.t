@@ -5,6 +5,7 @@ class Enemy
     damage := 5
     active := true
     size := 100
+    var bulArr : flexible array 1 .. 0 of ^Bullet
 
     body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
 	pX := px
@@ -15,6 +16,21 @@ class Enemy
 	dfCol := c
 	HP := s
 	col := dfCol
+	if (tp = 2) then
+	    new bulArr, 1
+	elsif (tp = 3) then
+	    new bulArr, 5
+	end if
+
+	for i : 1 .. upper (bulArr)
+	    var temp : ^Bullet
+	    new temp
+	    ^temp.cons (pX, pY - 16, 0, -20, 2, 66 + i, 3)
+	    ^temp.setActive (false)
+	    bulArr (i) := temp
+	end for
+	%^ (bulArr (1)).setActive (false)
+
     end cons
 
     body proc move
@@ -61,4 +77,31 @@ class Enemy
 	col := dfCol
     end erase
 
+    proc s_shoot
+	for i : 1 .. upper (bulArr)
+	    if ^ (bulArr (i)).getY () <= 0 then
+		^ (bulArr (i)).erase
+		^ (bulArr (i)).setActive (false)
+		var temp : ^Bullet
+		new temp
+		^temp.cons (pX, pY -16, 0, -20, 2, 66+i, 3)
+		bulArr(i) := temp
+	    end if
+	    if ^ (bulArr (i)).active = true then
+		^ (bulArr (i)).move
+	    else
+	    end if
+	end for
+    end s_shoot
+    
+    proc m_shoot
+    end m_shoot
+
+    body proc shoot 
+	if (tp = 2) then
+	    s_shoot
+	elsif tp = 3 then
+	    m_shoot
+	end if
+    end shoot
 end Enemy
