@@ -3,11 +3,20 @@ class Plane
     inherit Objects in "Objects.t"
     import Bullet in "Bullet.t"
     export HP, damage,
-	stopDisplay, boom, shoot, hit
+	stopDisplay, boom, shoot, hit,
+	sDx, sDy
 
     var HP, damage : int
 
+    proc sDx (x : int)
+	dX := x
+    end sDx
 
+    proc sDy (y : int)
+	dY := y
+    end sDy
+    
+    
     deferred proc shoot
 
     proc stopDisplay
@@ -16,16 +25,16 @@ class Plane
 
     proc boom
 	%draw
-	Draw.FillStar (pX + 17, pY + 17, pX - 17, pY - 17, yellow)
-	Draw.FillStar (pX - 10, pY - 10, pX + 10, pY + 10, red)
-	delay (35)
+	Draw.FillStar (pX + 20, pY + 20, pX - 20, pY - 20, yellow)
+	Draw.FillStar (pX - 13, pY - 13, pX + 13, pY + 13, red)
+	delay (30)
 	%erase
-	Draw.FillStar (pX + 17, pY + 17, pX - 17, pY - 17, 176)
-	Draw.FillStar (pX - 10, pY - 10, pX + 10, pY + 10, 176)
+	Draw.FillStar (pX + 20, pY + 20, pX - 20, pY - 20, 176)
+	Draw.FillStar (pX - 13, pY - 13, pX + 13, pY + 13, 176)
     end boom
 
     %this fcn processes to reduce HP,
-    %at thte same time results if the plane dies
+    %at the same time results if the plane dies
     fcn hit (d : int) : boolean
 	HP -= d
 	if HP <= 0 then

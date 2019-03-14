@@ -3,7 +3,7 @@ class MyPlane
     inherit Plane in "Plane.t"
 
     export EXP, life, bulArr,
-	sDx, sDy, addEXP
+	addEXP
     var EXP, life : int
     var bulNum : int := 25
     var bulArr : array 1 .. 25 of ^Bullet
@@ -12,17 +12,10 @@ class MyPlane
     tp := 1
     var bulCnt := 1
 
+    size := 3000
     HP := 100
     damage := 25
     EXP := 0
-
-    proc sDx (x : int)
-	dX := x
-    end sDx
-
-    proc sDy (y : int)
-	dY := y
-    end sDy
 
     body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
 	pX := px
@@ -76,7 +69,7 @@ class MyPlane
 
     % this proc adds EXP when scored
     proc addEXP (e : int)
-	EXP += e div 10
+	EXP += e div 100
     end addEXP
 
     body proc shoot
