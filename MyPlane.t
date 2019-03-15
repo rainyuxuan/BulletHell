@@ -13,7 +13,7 @@ class MyPlane
     var bulCnt := 1
 
     size := 3000
-    HP := 100
+    HP := 1000
     damage := 25
     EXP := 0
 
@@ -62,7 +62,7 @@ class MyPlane
     end draw
 
     body proc erase
-	col := 176
+	col := 151
 	draw
 	col := dfCol
     end erase

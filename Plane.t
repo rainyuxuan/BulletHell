@@ -20,17 +20,19 @@ class Plane
     deferred proc shoot
 
     proc stopDisplay
-	dfCol := 176
+	dfCol := 151
     end stopDisplay
 
     proc boom
 	%draw
-	Draw.FillStar (pX + 20, pY + 20, pX - 20, pY - 20, yellow)
-	Draw.FillStar (pX - 13, pY - 13, pX + 13, pY + 13, red)
+	var x : int := pX
+	var y : int := pY
+	Draw.FillStar (x + 20, y + 20, x - 20, y - 20, yellow)
+	Draw.FillStar (x - 13, y - 13, x + 13, y + 13, red)
 	delay (30)
 	%erase
-	Draw.FillStar (pX + 20, pY + 20, pX - 20, pY - 20, 176)
-	Draw.FillStar (pX - 13, pY - 13, pX + 13, pY + 13, 176)
+	Draw.FillStar (x + 20, y + 20, x - 20, y - 20, 151)
+	Draw.FillStar (x - 13, y - 13, x + 13, y + 13, 151)
     end boom
 
     %this fcn processes to reduce HP,

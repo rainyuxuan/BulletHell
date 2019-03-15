@@ -11,6 +11,7 @@ class Enemy
     var bulCnt : int := 1
     var bulArr : flexible array 1 .. 0 of ^Bullet
     var hasShot : boolean := false
+    var midShootSpeed: int := 15
 
     body proc cons (px : int, py : int, dx : int, dy : int, t : int, c : int, s : int)
 	pX := px
@@ -27,7 +28,7 @@ class Enemy
 	    new bulArr, 1
 	    var temp : ^Bullet
 	    new temp
-	    ^temp.cons (pX, pY - 5, 0, -20, 2, Rand.Int (60, 90), 5)
+	    ^temp.cons (pX, pY - 5, 0, -5, 2, Rand.Int (60, 90), 5)
 	    ^temp.setActive (true)
 	    bulArr (1) := temp
 	    bulNum := 1
@@ -38,35 +39,35 @@ class Enemy
 	    for i : 1 .. 7
 		var temp : ^Bullet
 		new temp
-		^temp.cons (pX, pY - 15, -6, -20, 2, 60 + i, 5)
+		^temp.cons (pX, pY - 15, -8, -midShootSpeed, 2, 60 + i, 5)
 		bulArr (i) := temp
 		^ (bulArr (i)).setActive (false)
 	    end for
 	    for i : 8 .. 14
 		var temp : ^Bullet
 		new temp
-		^temp.cons (pX, pY - 15, -3, -15, 2, 60 + i, 5)
+		^temp.cons (pX, pY - 15, -4, -midShootSpeed, 2, 60 + i, 5)
 		bulArr (i) := temp
 		^ (bulArr (i)).setActive (false)
 	    end for
 	    for i : 15 .. 21
 		var temp : ^Bullet
 		new temp
-		^temp.cons (pX, pY - 15, 0, -15, 2, 60 + i, 5)
+		^temp.cons (pX, pY - 15, 0, -midShootSpeed, 2, 60 + i, 5)
 		bulArr (i) := temp
 		^ (bulArr (i)).setActive (false)
 	    end for
 	    for i : 22 .. 28
 		var temp : ^Bullet
 		new temp
-		^temp.cons (pX, pY - 15, 3, -15, 2, 60 + i, 5)
+		^temp.cons (pX, pY - 15, 4, -midShootSpeed, 2, 60 + i, 5)
 		bulArr (i) := temp
 		^ (bulArr (i)).setActive (false)
 	    end for
 	    for i : 29 .. 35
 		var temp : ^Bullet
 		new temp
-		^temp.cons (pX, pY - 15, 6, -15, 2, 60 + i, 5)
+		^temp.cons (pX, pY - 15, 8, -midShootSpeed, 2, 60 + i, 5)
 		bulArr (i) := temp
 		^ (bulArr (i)).setActive (false)
 	    end for
@@ -83,7 +84,7 @@ class Enemy
 	pX += dX
 	pY += dY
 	draw
-	if pY <= 300 or pY >= 520 then
+	if pY <= 400 or pY >= 520 then
 	    dY := -dY
 	end if
 	if tp = 3 and (pX >= 390 or pX <=10) then
@@ -115,7 +116,7 @@ class Enemy
     end draw
 
     body proc erase
-	col := 176
+	col := 151
 	draw
 	col := dfCol
     end erase
@@ -129,7 +130,7 @@ class Enemy
 	    end if
 	elsif tp = 3 then
 	    for i : 1 .. bulNum %go through each bullet
-		if ^ (bulArr (i)).getY () <= -10 then %if exceed boundary
+		if ^ (bulArr (i)).getY () <= -100 then %if exceed boundary
 		    ^ (bulArr (i)).erase            %disappear and will not move/draw
 		    ^ (bulArr (i)).setActive (false)
 		    ^ (bulArr (i)).sP (pX, pY - 15)

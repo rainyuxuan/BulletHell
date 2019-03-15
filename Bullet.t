@@ -31,7 +31,7 @@ class Bullet
     end draw
 
     body proc erase
-	col := 176
+	col := 151
 	draw
 	col := dfCol
     end erase

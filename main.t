@@ -2,15 +2,16 @@ import MyPlane in "MyPlane.t", Enemy in "Enemy.t"
 
 View.Set ("graphics")
 View.Update
-setscreen ("graphics:400;600,nocursor")
+setscreen ("graphics:400;590,nocursor")
 
-%%%%%%%%%%%%%%%%%%%% Initialization %%%%%%%%%%%%%%%%%%%%%%%
-Draw.FillBox (0, 0, 400, 550, 176)
 
-%%%%%% Overall settings %%%%%%%
+%%%%%% Overall Settings %%%%%%%
 var timer : int := 0 % count the time
 var gameOver : boolean := false
+var victory : boolean := false
 
+%%%%%% Specific Settings %%%%%%%
+var vicCondition : int := 13141
 %%%%%% Enemy Setup %%%%%
 var eneArr : flexible array 1 .. 0 of ^Enemy %%store the enemies for scanning
 var openFire : boolean := false %%check pos to start shooting
@@ -21,7 +22,18 @@ var me : ^MyPlane
 new me
 ^me.cons (200, 70, 0, 0, 1, white, 37)
 
+new eneArr, 10
+for i : 1 .. 10
+    var newEne : ^Enemy
+    new newEne
+    eneArr (i) := newEne
+    ^newEne.cons (-400, 530 - i * 5, 0, 0, 2, 0, 1000)
+end for
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%% Functions and Procedures %%%%%%%%%%%%%%%%%%%
@@ -32,13 +44,15 @@ proc checkHit
 	var x : int := ^ ( ^me.bulArr (i)).pX
 	var y : int := ^ ( ^me.bulArr (i)).pY
 	for j : 1 .. upper (eneArr)    %%%%%%%%% BUG no UNDERSTAND
-	    if (x >= ^ (eneArr (j)).pX - 15 and x <= ^ (eneArr (j)).pX + 15)
-		    and (y >= ^ (eneArr (j)).pY - 14 and y <= ^ (eneArr (j)).pY + 14)
-		    and ^ (eneArr (j)).active then
-		^ ( ^me.bulArr (i)).setActive (false)
-		^ ( ^me.bulArr (i)).erase ()
-		if ^ (eneArr (j)).hit ( ^me.damage) then
-		    ^me.addEXP ( ^ (eneArr (j)).size)
+	    if ^ (eneArr (j)).active then
+		if (x >= ^ (eneArr (j)).pX - 15 and x <= ^ (eneArr (j)).pX + 15)
+			and (y >= ^ (eneArr (j)).pY - 14 and y <= ^ (eneArr (j)).pY + 14) then
+		    %%%%and
+		    ^ ( ^me.bulArr (i)).setActive (false)
+		    ^ ( ^me.bulArr (i)).erase ()
+		    if ^ (eneArr (j)).hit ( ^me.damage) then
+			^me.addEXP ( ^ (eneArr (j)).size)
+		    end if
 		end if
 	    end if
 	end for
@@ -46,8 +60,8 @@ proc checkHit
     % ene hit me
     for i : 1 .. upper (eneArr)
 	for j : 1 .. ^ (eneArr (i)).bulNum
-	    if ^ ( ^ (eneArr (i)).getBul (j)).pX > ^me.pX - 8 and ^ ( ^ (eneArr (i)).getBul (j)).pX < ^me.pX + 8
-		    and ^ ( ^ (eneArr (i)).getBul (j)).pY > ^me.pY - 8 and ^ ( ^ (eneArr (i)).getBul (j)).pY < ^me.pY + 8
+	    if ^ ( ^ (eneArr (i)).getBul (j)).pX > ^me.pX - 5 and ^ ( ^ (eneArr (i)).getBul (j)).pX < ^me.pX + 5
+		    and ^ ( ^ (eneArr (i)).getBul (j)).pY > ^me.pY - 5 and ^ ( ^ (eneArr (i)).getBul (j)).pY < ^me.pY + 5
 		    and ^ ( ^ (eneArr (i)).getBul (j)).active then
 		^ ( ^ (eneArr (i)).getBul (j)).setActive (false)
 		^ ( ^ (eneArr (i)).getBul (j)).erase ()
@@ -60,7 +74,7 @@ proc checkHit
 end checkHit
 
 fcn eneClear () : boolean
-    for i : 1 .. upper (eneArr)
+    for i : 1 .. 10
 	if ^ (eneArr (i)).active then
 	    result false
 	end if
@@ -69,76 +83,90 @@ fcn eneClear () : boolean
 end eneClear
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% WAVES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 proc smallFromLeft
-    new eneArr, 10
     for i : 1 .. 10
-	var they : ^Enemy
-	new they
-	eneArr (i) := they
+	var newEne : ^Enemy
+	new newEne
+	eneArr (i) := newEne
 	%pX, pY, dX, dY, type, color, size
-	^they.cons (-i * 40, 530 - i * 5,
+	^newEne.cons (-i * 40, 530 - i * 5,
 	    3, Rand.Int (-1, 1),
-	    2, 60 + i * 3, 1000)
-	%%% test with stable
-	% ^they.cons (50 + i * 50, 500 - i * 5,
-	%     0, 0,
-	%     2, 60 + i * 3, 1000)
-	%%%% end test
+	    2, 73 + i * 3, 1000)
     end for
 end smallFromLeft
 
 proc smallFromRight
-    new eneArr, 10
     for i : 1 .. 10
-	var they : ^Enemy
-	new they
+	var newEne : ^Enemy
+	new newEne
 	%pX, pY, dX, dY, type, color, size
-	^they.cons (400 + i * 40, 530 - i * 5,
+	^newEne.cons (400 + i * 40, 530 - i * 5,
 	    - 3, Rand.Int (-1, 1),
-	    2, 60 + i * 3, 1000)
-	eneArr (i) := they
+	    2, 73 + i * 3, 1000)
+	eneArr (i) := newEne
     end for
 end smallFromRight
 
 proc middleFromLeft
-    new eneArr, 1
-    var they : ^Enemy
-    new they
-    ^they.cons (20, 450, 2, -1, 3, white, 15000)
-    eneArr (1) := they
+    var newEne : ^Enemy
+    new newEne
+    ^newEne.cons (20, 450, 2, -1, 3, Rand.Int(96,103), 15000)
+    eneArr (upper (eneArr)) := newEne
 end middleFromLeft
 
 %%%%%%%%%%%%%%%%%%%%%% PROCESSES %%%%%%%%%%%%%%%%%%%%%%%%%
-process MAIN ()
-    loop
-	^me.shoot ()
 
+var inBattle : boolean := false
+var timeRecord : int := 0
+
+process MAIN
+    loop
+	%%%%%% main actions %%%%%%%
 	^me.move ()
-	delay (25)
 	for i : 1 .. upper (eneArr)
 	    ^ (eneArr (i)).move ()
 	end for
+	^me.shoot ()
 	checkHit
-	exit when gameOver
-    end loop
-end MAIN
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%% build Enemy %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-var inBattle : boolean := false
-process SCHEDULE
-    loop
+	%%%%%%% middle %%%%%%%%
+	if timer mod 300 = 299 and upper (eneArr) < 15 then
+	    new eneArr, upper (eneArr) + 1
+	    middleFromLeft
+	elsif timer mod 300 = 299 then
+	    for i : 11 .. 15
+		if ^ (eneArr (i)).pY <= 0 then
+		    var newEne : ^Enemy
+		    new newEne
+		    ^newEne.cons (20, 450, 2, -1, 3, Rand.Int(96,103), 15000)
+		    eneArr (i) := newEne
+		    exit
+		end if
+	    end for
+	end if
+	%%%%% middle when died %%%%%
+	for i : 11 .. upper (eneArr)
+	    if not ^ (eneArr (i)).active then
+		^ (eneArr (i)).sP (0, -500)
+		timeRecord := timer
+
+		if timer = timeRecord + 100 then
+		    var newEne : ^Enemy
+		    new newEne
+		    ^newEne.cons (20, -450, 2, -1, 3, Rand.Int(96,103), 15000)
+		    eneArr (i) := newEne
+		end if
+	    end if
+	end for
+
+	%%%%%%%%%%% small %%%%%%%%%%%
 	if not inBattle then
-	    %% choose mode %%
+	    %% choose mode : left/right %%
 	    openFire := false
-	    delay(500)
-	    if timer mod 4 = 0 then
-		for i : 1 .. upper (eneArr)
-		    ^ (eneArr (i)).erase
-		end for
-
-		shootMode := 3
-		middleFromLeft
-		inBattle := true
-	    elsif timer mod 2 = 0 then
+	    
+	    if timer mod 2 = 0 then
 		for i : 1 .. upper (eneArr)
 		    ^ (eneArr (i)).erase
 		end for
@@ -159,14 +187,16 @@ process SCHEDULE
 	else
 	    %%% start to shoot %%%
 	    if openFire then
-		for i : 1 .. upper (eneArr)
+		for i : 1 .. 10
 		    if ^ (eneArr (i)).active or ^ (eneArr (i)).hasShot then
 			^ (eneArr (i)).shoot
 		    end if
 		end for
+
 	    end if
-
-
+	    for i : 11 .. upper (eneArr)
+		^ (eneArr (i)).shoot ()
+	    end for
 	    %%%%%% end of a battle %%%%%
 	    if eneClear () then
 		for i : 1 .. upper (eneArr)
@@ -175,46 +205,41 @@ process SCHEDULE
 		    end for
 		end for
 		inBattle := false
-
-		%new eneArr, 0
 	    end if
-
+	    %%%%% Condition of openFire & inBattle %%%%%
 	    if shootMode = 1 then
 		if ^ (eneArr (1)).pX >= Rand.Int (300, 380) and not openFire then
 		    openFire := true
-		    for i : 1 .. upper (eneArr)
+		    for i : 1 .. 10
 			^ ( ^ (eneArr (i)).getBul (1)).sP ( ^ (eneArr (i)).pX, ^ (eneArr (i)).pY - 20)
 		    end for
 		end if
-		if ^ (eneArr (upper (eneArr))).pX >= 420 then
+		if ^ (eneArr (1)).pX >= 820 then
 		    inBattle := false
-		    %new eneArr, 0
 		end if
 	    elsif shootMode = -1 then
 		if ^ (eneArr (1)).pX <= Rand.Int (20, 100) and not openFire then
 		    openFire := true
-		    for i : 1 .. upper (eneArr)
+		    for i : 1 .. 10
 			^ ( ^ (eneArr (i)).getBul (1)).sP ( ^ (eneArr (i)).pX, ^ (eneArr (i)).pY - 20)
 		    end for
 		end if
-		if ^ (eneArr (upper (eneArr))).pX <= -20 then
+		if ^ (eneArr (1)).pX <= -420 then
 		    inBattle := false
-		    %new eneArr, 0
-		end if
-	    elsif shootMode = 3 then
-		if ^ (eneArr (1)).pX <= 350 and ^ (eneArr (1)).pX >= 50 and not openFire then
-		    openFire := true
-		    for i : 1 .. upper (eneArr)
-			^ ( ^ (eneArr (i)).getBul (1)).sP ( ^ (eneArr (i)).pX, ^ (eneArr (i)).pY - 15)
-		    end for
 		end if
 	    end if
 	end if
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	delay (50)
+	
+	
+	%%%%%%%%% System Control %%%%%%%%%
+	delay (25)
 	timer += 1
+	if timer >= vicCondition then
+	    victory := true
+	end if
+	exit when gameOver or victory
     end loop
-end SCHEDULE
+end MAIN
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var direct : string (1)
@@ -234,6 +259,7 @@ process CONTROL ()
 	if direct (KEY_LEFT_ARROW) then
 	    ^me.sDx (-4)
 	end if
+	exit when gameOver
     end loop
 end CONTROL
 
@@ -242,10 +268,9 @@ process UI_DISPLAY
     loop
 	delay (100)
 	locatexy (2, 580)
-	put "Your score: ", ^me.EXP, " eC:", eneClear (), " timer: ",
-	    timer, " oF: ", openFire, " iB: ", inBattle
+	put "Your score: ", ^me.EXP, " HP: ", ^me.HP, " timer: ", timer, " eneArr: ", upper (eneArr)
 	Draw.FillBox (0, 550, 400, 570, gray)
-	Draw.FillBox (0, 550, 4 * ^me.HP, 570, red)
+	Draw.FillBox (0, 550, 4 * ^me.HP div 10, 570, 41)   %%%% HP
 	delay (100)
     end loop
 end UI_DISPLAY
@@ -257,7 +282,30 @@ end UI_DISPLAY
 %%%%%%%%%%%%%%%%%%%%%% Main Program %%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%% Game LOOP %%%%%%%%%%%%%%%%%
-fork CONTROL
+
+
+Draw.FillBox (0, 0, 400, 550, 151)
+
+
 fork MAIN
 fork UI_DISPLAY
-fork SCHEDULE
+fork CONTROL
+
+loop
+    if victory then
+	^me.cons ( ^me.pX, ^me.pY, 0, 4, 1, white, 37)
+	Draw.FillBox (0, 0, 400, 550, 151)
+	^me.draw ()
+	delay (1000)
+	loop
+	    ^me.draw ()
+	    delay (50)
+	    ^me.erase ()
+	    ^me.sP ( ^me.pX, ^me.pY - 4)
+	    exit when ^me.pY < -50
+	end loop
+	exit
+    elsif gameOver then
+	Draw.FillBox (0, 0, 400, 550, 151)
+    end if
+end loop
