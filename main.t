@@ -44,15 +44,16 @@ proc checkHit
 	var x : int := ^ ( ^me.bulArr (i)).pX
 	var y : int := ^ ( ^me.bulArr (i)).pY
 	for j : 1 .. upper (eneArr)    %%%%%%%%% BUG no UNDERSTAND
-	    if ^ (eneArr (j)).active then
-		if (x >= ^ (eneArr (j)).pX - 15 and x <= ^ (eneArr (j)).pX + 15)
-			and (y >= ^ (eneArr (j)).pY - 14 and y <= ^ (eneArr (j)).pY + 14) then
-		    %%%%and
-		    ^ ( ^me.bulArr (i)).setActive (false)
-		    ^ ( ^me.bulArr (i)).erase ()
-		    if ^ (eneArr (j)).hit ( ^me.damage) then
-			^me.addEXP ( ^ (eneArr (j)).size)
-		    end if
+	    if ^ (eneArr (j)).active
+		    and x >= ^ (eneArr (j)).pX - 15
+		    and x <= ^ (eneArr (j)).pX + 15
+		    and y >= ^ (eneArr (j)).pY - 14
+		    and y <= ^ (eneArr (j)).pY + 14 then
+
+		^ ( ^me.bulArr (i)).setActive (false)
+		^ ( ^me.bulArr (i)).erase ()
+		if ^ (eneArr (j)).hit ( ^me.damage) then
+		    ^me.addEXP ( ^ (eneArr (j)).size)
 		end if
 	    end if
 	end for
@@ -60,14 +61,19 @@ proc checkHit
     % ene hit me
     for i : 1 .. upper (eneArr)
 	for j : 1 .. ^ (eneArr (i)).bulNum
-	    if ^ ( ^ (eneArr (i)).getBul (j)).pX > ^me.pX - 5 and ^ ( ^ (eneArr (i)).getBul (j)).pX < ^me.pX + 5
-		    and ^ ( ^ (eneArr (i)).getBul (j)).pY > ^me.pY - 5 and ^ ( ^ (eneArr (i)).getBul (j)).pY < ^me.pY + 5
+	    if ^ ( ^ (eneArr (i)).getBul (j)).pX > ^me.pX - 6
+		    and ^ ( ^ (eneArr (i)).getBul (j)).pX < ^me.pX + 6
+		    and ^ ( ^ (eneArr (i)).getBul (j)).pY > ^me.pY - 6
+		    and ^ ( ^ (eneArr (i)).getBul (j)).pY < ^me.pY + 6
 		    and ^ ( ^ (eneArr (i)).getBul (j)).active then
+
 		^ ( ^ (eneArr (i)).getBul (j)).setActive (false)
 		^ ( ^ (eneArr (i)).getBul (j)).erase ()
+
 		if ^me.hit ( ^ (eneArr (i)).damage) then
 		    gameOver := true
 		end if
+
 	    end if
 	end for
     end for
@@ -109,7 +115,7 @@ end smallFromRight
 proc middleFromLeft
     var newEne : ^Enemy
     new newEne
-    ^newEne.cons (20, 450, 2, -1, 3, Rand.Int(96,103), 15000)
+    ^newEne.cons (20, 450, 2, -1, 3, Rand.Int (96, 103), 13900)
     eneArr (upper (eneArr)) := newEne
 end middleFromLeft
 
@@ -127,8 +133,8 @@ process MAIN
 	end for
 	^me.shoot ()
 	checkHit
-	
-	
+
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%% build Enemy %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 	%%%%%%% middle %%%%%%%%
@@ -140,7 +146,7 @@ process MAIN
 		if ^ (eneArr (i)).pY <= 0 then
 		    var newEne : ^Enemy
 		    new newEne
-		    ^newEne.cons (20, 450, 2, -1, 3, Rand.Int(96,103), 15000)
+		    ^newEne.cons (20, 450, 2, -1, 3, Rand.Int (96, 103), 13900)
 		    eneArr (i) := newEne
 		    exit
 		end if
@@ -155,17 +161,17 @@ process MAIN
 		if timer = timeRecord + 100 then
 		    var newEne : ^Enemy
 		    new newEne
-		    ^newEne.cons (20, -450, 2, -1, 3, Rand.Int(96,103), 15000)
+		    ^newEne.cons (20, -450, 2, -1, 3, Rand.Int (96, 103), 13900)
 		    eneArr (i) := newEne
 		end if
 	    end if
 	end for
 
 	%%%%%%%%%%% small %%%%%%%%%%%
-	if not inBattle then
+	if not inBattle and timer > 100 then
 	    %% choose mode : left/right %%
 	    openFire := false
-	    
+
 	    if timer mod 2 = 0 then
 		for i : 1 .. upper (eneArr)
 		    ^ (eneArr (i)).erase
@@ -229,8 +235,8 @@ process MAIN
 		end if
 	    end if
 	end if
-	
-	
+
+
 	%%%%%%%%% System Control %%%%%%%%%
 	delay (25)
 	timer += 1
@@ -268,7 +274,7 @@ process UI_DISPLAY
     loop
 	delay (100)
 	locatexy (2, 580)
-	put "Your score: ", ^me.EXP, " HP: ", ^me.HP, " timer: ", timer, " eneArr: ", upper (eneArr)
+	put "Your score: ", ^me.EXP, " " : 15, "Survive ", (vicCondition - timer) * 25 div 1000, "s to go"
 	Draw.FillBox (0, 550, 400, 570, gray)
 	Draw.FillBox (0, 550, 4 * ^me.HP div 10, 570, 41)   %%%% HP
 	delay (100)
@@ -280,13 +286,43 @@ end UI_DISPLAY
 
 
 %%%%%%%%%%%%%%%%%%%%%% Main Program %%%%%%%%%%%%%%%%%%%%
+Draw.FillBox (0, 0, 400, 590, 151)
+var inInstruction : boolean := false
+var input : array char of boolean
+colorback (151)
+color (white)
+loop
+
+    Input.KeyDown (input)
+    if input (' ') then
+	var cbg : int := 31
+	Draw.FillBox (0, 0, 400, 590, cbg)
+	Draw.FillBox (0, 0, 400, 550, 151)
+	colorback (cbg)
+	color (black)
+	exit
+    elsif input (KEY_SHIFT) then
+	inInstruction := true
+	cls
+	locatexy (0, 330)
+	put "" : 5, "Control your plane with the ARROW KEYS"
+	put "" : 8, "Save yourself from the bullet hell"
+	put "" : 16, "and Shoot'em UP!!!"
+	put "" : 10, "Press SPACE to start the game"
+    elsif not inInstruction then
+	locatexy (0, 400)
+	put "" : 12, "Welcome to MICRO Star Wars"
+	locatexy (0, 200)
+	put "" : 12, "Press SHIFT for instructions"
+	put "" : 16, "Press SPACE to start"
+	delay (50)
+    end if
+end loop
+
+
 
 %%%%%%%%%%%%%%%%%%% Game LOOP %%%%%%%%%%%%%%%%%
-
-
-Draw.FillBox (0, 0, 400, 550, 151)
-
-
+Music.PlayFileReturn("MP3:1")
 fork MAIN
 fork UI_DISPLAY
 fork CONTROL
@@ -304,8 +340,29 @@ loop
 	    ^me.sP ( ^me.pX, ^me.pY - 4)
 	    exit when ^me.pY < -50
 	end loop
+	Draw.FillStar(80,150,320,390,white)
 	exit
     elsif gameOver then
-	Draw.FillBox (0, 0, 400, 550, 151)
+	delay (200)
+	exit
     end if
 end loop
+
+if gameOver then
+    var gOTimer : int := 0
+    %%% flashing %%%
+    loop
+	Draw.FillBox (0, 0, 400, 550, white)
+	delay (15)
+	Draw.FillBox (0, 0, 400, 550, 151)
+	delay (15)
+	gOTimer += 1
+	exit when gOTimer = 20
+    end loop
+    %%% end %%%
+    Draw.FillBox (0, 0, 400, 590, black)
+    colorback (black)
+    color (white)
+    locatexy (0, 300)
+    put "" : 16, "qwq, MISSION FAILED"
+end if

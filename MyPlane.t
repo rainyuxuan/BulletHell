@@ -1,9 +1,8 @@
 unit
 class MyPlane
     inherit Plane in "Plane.t"
-
-    export EXP, life, bulArr,
-	addEXP
+    export EXP, bulArr, addEXP
+    
     var EXP, life : int
     var bulNum : int := 25
     var bulArr : array 1 .. 25 of ^Bullet
@@ -12,7 +11,7 @@ class MyPlane
     tp := 1
     var bulCnt := 1
 
-    size := 3000
+    %size := 3000
     HP := 1000
     damage := 25
     EXP := 0
@@ -33,8 +32,6 @@ class MyPlane
 	    bulArr (i) := temp
 	    ^ (bulArr (i)).setActive (true)
 	end for
-	%^ (bulArr (1)).setActive (false)
-	%^ (bulArr (1)).draw
     end cons
 
     body proc move
@@ -79,17 +76,17 @@ class MyPlane
 		^ (bulArr (i)).setActive (false)
 		var temp : ^Bullet                  %create new bullet for future use
 		new temp
-		^temp.cons (pX, pY + 15, Rand.Int(-1,1), 20, 1, 66 + i, 3)
+		^temp.cons (pX, pY + 15, Rand.Int (-1, 1), 20, 1, 66 + i, 3)
 		bulArr (i) := temp
 	    end if
-	    
+
 	    if ^ (bulArr (i)).active = true then    %for each active bullet, move&draw
 		^ (bulArr (i)).move
 	    else
-		%since only one bullet is shot from me each time, 
+		%since only one bullet is shot from me each time,
 		%therefore we can only activate this bullet
 		%which is bulArr(bulCnt)
-		^ (bulArr (bulCnt)).setActive (true)    
+		^ (bulArr (bulCnt)).setActive (true)
 	    end if
 	end for
 	bulCnt += 1
