@@ -1,0 +1,2 @@
+Hudson : SCORE 8800 WIN HP : 20%
+Leo    : SCORE 8731 WIN HP : 2%

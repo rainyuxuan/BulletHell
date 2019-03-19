@@ -1,33 +1,25 @@
+%%% this is a class for all the objects in the game %%%
 unit
 class Objects
-    export pX, pY, col, dX, dY, size, active,dfCol,
-	getX, getY, sP, cons,
-	move, draw, erase,
-	setActive
-    var pX, pY, dX, dY : int
-    var tp, size, dfCol : int
-    var col : int
-    var active : boolean := true
+    export pX, pY, col, dX, dY, size, active, dfCol,
+	cons, move, draw, erase,
+	sP, setActive
+    var pX, pY, dX, dY : int    %% position and moving direction
+    var tp, size, dfCol : int   %% type, size, default color
+    var col : int               %% current color (for erase)
+    var active : boolean := true %% if the object is still working(alive)
 
-    deferred proc cons (px, py, dx, dy, t, c, s : int)
-    deferred proc erase
-    deferred proc draw
-    deferred proc move
+    deferred proc cons (px, py, dx, dy, t, c, s : int) %% constructor
+    deferred proc erase  %% erase (draw with background color)
+    deferred proc draw   %% draw
+    deferred proc move   %% move
 
-    fcn getX () : int
-	result pX
-    end getX
-
-    fcn getY () : int
-	result pY
-    end getY
-
-    proc sP (x, y : int) %set position
+    proc sP (x, y : int) %% set position
 	pX := x
 	pY := y
     end sP
 
-    proc setActive (b : boolean)
+    proc setActive (b : boolean) %% set active
 	active := b
     end setActive
 
