@@ -38,10 +38,10 @@ class MyPlane
 
     body proc move %% move my plane
 	erase
-	if pX + dX > 25 and pX + dX < 380 then %% no exceed boundary
+	if pX + dX > 20 and pX + dX < 380 then %% no exceed boundary
 	    pX += dX
 	end if
-	if pY + dY > 45 and pY + dY < 200 then
+	if pY + dY > 35 and pY + dY < 200 then
 	    pY += dY
 	end if
 	draw

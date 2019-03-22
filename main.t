@@ -258,7 +258,7 @@ process MAIN
 		    inBattle := false
 		end if
 	    end if
-	end if
+	end if 
 
 
 	%%%%%%%%% System Control %%%%%%%%%
@@ -292,6 +292,7 @@ process CONTROL ()
 	if direct (KEY_LEFT_ARROW) then
 	    ^me.sDx (-4)
 	end if
+	delay(25)
 	exit when gameOver
     end loop
 end CONTROL
@@ -322,6 +323,7 @@ colorback (151)
 color (white)
 
 %% cover page %%
+Music.PlayFileLoop ("2.WAV")
 Draw.FillBox (0, 0, 400, 590, 151)
 Draw.FillStar (150, 250, 250, 350, white)
 locatexy (0, 400)
@@ -353,7 +355,7 @@ loop
 end loop
 
 %%%%%%%%%%%%%%%%%%% In Game %%%%%%%%%%%%%%%%%%
-Music.PlayFileReturn ("MP3:1")
+
 fork MAIN
 fork UI_DISPLAY
 delay(1500)
